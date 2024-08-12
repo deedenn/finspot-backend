@@ -1,7 +1,7 @@
-const Organisation = require("../models/organizations");
+const Organization = require("../models/organizations");
 
 const getOrganizations = (req, res, next) => {
-    Organisation.find({})
+    Organization.find({})
         .then((organizations) => {
             res.send({ organizations });
         })
@@ -10,11 +10,12 @@ const getOrganizations = (req, res, next) => {
         });
 };
 
+// создание новой организиции
 const createOrganization = (req, res, next) => {
     const {
         inn, name,
     } = req.body;
-    Organisation.create(
+    Organization.create(
         {
             inn, name,
         }
@@ -30,6 +31,12 @@ const createOrganization = (req, res, next) => {
             next(err);
         });
 }
+
+// Установка маршрута согласования
+
+// Продление срока действия подписки
+
+// Прекращение доступа при неоплате подписки
 
 module.exports = {
     getOrganizations, createOrganization,

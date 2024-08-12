@@ -8,6 +8,8 @@ const NotFoundError = require('../errors/notfound');
 const UnauthorizedError = require('../errors/unautorized');
 const ConflictError = require('../errors/conflict');
 
+
+// получение списка всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
@@ -18,6 +20,7 @@ const getUsers = (req, res, next) => {
     });
 };
 
+// создание нового пользователя
 const createUser = (req, res, next) => {
   const {
     name, fullname, email, password,
@@ -51,6 +54,7 @@ const createUser = (req, res, next) => {
     });
 };
 
+// логин
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -76,6 +80,12 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
+
+// редактирование пароля пользователя
+
+
+// удаление пользователя из доступа к организации
+
 
 module.exports = {
   getUsers, createUser, login,

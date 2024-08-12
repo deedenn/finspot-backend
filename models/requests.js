@@ -1,22 +1,28 @@
 const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
-  // owner: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'user',
-  //   required: true,
-  // },
+  requestId: {
+    type: Number,
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
   description: {
     type: String,
     minlength: 2,
     maxlength: 30,
     default: 'Жак-Ив Кусто',
   },
-  company: {
+  organization: {
     type: String,
     minlength: 2,
     maxlength: 30,
     default: 'Ваша компания',
+  },
+  file: {
+    type: String,
   },
   contragent: {
     type: String,
@@ -30,9 +36,15 @@ const requestSchema = new mongoose.Schema({
     maxlength: 10,
     default: '0',
   },
+  status: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  statuslog: {
+    type: Array,
   },
 });
 

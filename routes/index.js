@@ -9,6 +9,6 @@ router.use(signRouter);
 
 router.use('/users', auth, usersRouter);
 router.use('/requests', auth, requestsRouter);
-router.use('/organizations', organizationsRouter);
+router.use('/org', organizationsRouter);
 
 module.exports = router;
