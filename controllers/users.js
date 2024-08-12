@@ -18,58 +18,20 @@ const getUsers = (req, res, next) => {
     });
 };
 
-const getUser = (req, res, next) => {
-  const { userId } = req.params;
-
-  User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      } else {
-        res.send({ data: user });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Введен некорректный ID'));
-        return;
-      }
-      next(err);
-    });
-};
-
-const getInfoUser = (req, res, next) => {
-  User.findById({ _id: req.user._id })
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      } else {
-        res.send({ data: user });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователя c таким ID не существует'));
-        return;
-      }
-      next(err);
-    });
-};
-
 const createUser = (req, res, next) => {
   const {
-    name, about, email, password,
+    name, fullname, email, password,
   } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, fullname, email, password: hash,
     }))
     .then((newUser) => {
       res.status(200).send({
         email: newUser.email,
         name: newUser.name,
-        about: newUser.about,
+        fullname: newUser.fullname,
       });
     })
     .catch((err) => {
@@ -86,34 +48,6 @@ const createUser = (req, res, next) => {
       } else {
         next(err);
       }
-    });
-};
-
-const updateUser = (req, res, next) => {
-  const owner = req.user._id;
-  const { name, about } = req.body;
-
-  User.findByIdAndUpdate(
-    owner,
-    { name, about },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь c указанным ID не найден');
-      } else {
-        res.send({ data: user });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
-        return;
-      }
-      next(err);
     });
 };
 
@@ -144,5 +78,5 @@ const login = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getUser, getInfoUser, createUser, updateUser, login,
+  getUsers, createUser, login,
 };

@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const requestSchema = new mongoose.Schema({
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-  desctription: {
+  // owner: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'user',
+  //   required: true,
+  // },
+  description: {
     type: String,
     minlength: 2,
     maxlength: 30,
@@ -37,4 +36,4 @@ const requestSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('user', requestSchema);
+module.exports = mongoose.model('request', requestSchema);

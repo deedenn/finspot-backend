@@ -14,16 +14,14 @@ const app = express();
 const router = require('./routes');
 //const signRouter = require('./routes/sign');
 //const { auth } = require('./middlewares/auth');
-//const NotFoundError = require('./errors/notfound');
+const NotFoundError = require('./errors/notfound');
 //const { centralError } = require('./middlewares/centralError');
 //const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-mongoose.connect('mongodb://127.0.0.1:27017/finspotdb', {
-  useNewUrlParser: true,
-})
+mongoose.connect('mongodb+srv://solovyevdenis:Q1YCZ4o1W4K9pjVJ@cluster0.lzqu4u0.mongodb.net/finspotdb')
   .then(() => {
     console.log('База данных подключена');
-  });
+  }).catch(console.error)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
