@@ -4,7 +4,7 @@ const registrySchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    //required: true,
+    required: true,
   },
   organization: {
     type: String,
@@ -14,8 +14,7 @@ const registrySchema = new mongoose.Schema({
     required: true,
   },
   requests: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'request',
+    type: Array,
     required: true,
   },
   amount: {

@@ -10,11 +10,15 @@ const organizationSchema = new mongoose.Schema({
         maxlength: 30,
         require: true,
     },
-    track: {
-        type: Object,
-    },
     users: {
-        type: Object,
+        type: Array,
+        // [
+        //     {
+        //         id: mongoose.Schema.Types.ObjectId,
+        //         index: Number,
+        //         actionState: String
+        //     }
+        // ]
     },
     status: {
         type: String,

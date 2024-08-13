@@ -7,6 +7,6 @@ requestsRouter.get('/', getOwnerRequest);
 requestsRouter.get('/all', getRequests);
 requestsRouter.post('/add', createRequest);
 requestsRouter.post('/check', checkRequest);
-requestsRouter.post('/edit', editRequest);
+requestsRouter.patch('/edit', editRequest);
 
 module.exports = requestsRouter;

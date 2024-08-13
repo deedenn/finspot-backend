@@ -49,14 +49,15 @@ const createRequest = (req, res, next) => {
 }
 
 // редактирование заявки
-// как поменять data? Не меняются значения
 
 const editRequest = (req, res, next) => {
   const id = req.body._id;
-  const { values } = req.body;
-  console.log(values);
+  const data = req.body;
+  console.log(data);
 
-  Request.findByIdAndUpdate(id, {values},
+  if (data.status !== "Черновик") res.status(400).send('Заявку с таким статусом невозможно изменить');
+
+  Request.findByIdAndUpdate(id, { ...data },
     {
       new: true,
       runValidators: true,
@@ -66,7 +67,7 @@ const editRequest = (req, res, next) => {
       if (!request) {
         throw new NotFoundError('Заявка с указанным ID не найдена');
       } else {
-         res.send({ data: request });
+        res.send(request);
       }
     })
     .catch((err) => {
@@ -83,7 +84,7 @@ const editRequest = (req, res, next) => {
 const checkRequest = (req, res, next) => {
   const id = req.body._id
 
-  Request.findByIdAndUpdate(id, {status: req.body.status},
+  Request.findByIdAndUpdate(id, { status: req.body.status },
     {
       new: true,
       runValidators: true,
@@ -93,7 +94,7 @@ const checkRequest = (req, res, next) => {
       if (!request) {
         throw new NotFoundError('Заявка с указанным ID не найдена');
       } else {
-         res.send({ data: request });
+        res.send({ data: request });
       }
     })
     .catch((err) => {
