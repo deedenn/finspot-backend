@@ -4,13 +4,14 @@ const registrySchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    //required: true,
   },
   organization: {
     type: String,
     minlength: 2,
     maxlength: 30,
     default: 'Ваша компания',
+    required: true,
   },
   requests: {
     type: mongoose.Schema.Types.ObjectId,

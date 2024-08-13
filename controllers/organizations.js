@@ -1,5 +1,6 @@
 const Organization = require("../models/organizations");
 
+// список всех организаций
 const getOrganizations = (req, res, next) => {
     Organization.find({})
         .then((organizations) => {
@@ -37,6 +38,7 @@ const createOrganization = (req, res, next) => {
 // Продление срока действия подписки
 
 // Прекращение доступа при неоплате подписки
+
 
 module.exports = {
     getOrganizations, createOrganization,
