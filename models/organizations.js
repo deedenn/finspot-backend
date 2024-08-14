@@ -19,20 +19,29 @@ const organizationSchema = new mongoose.Schema({
         //         actionState: String
         //     }
         // ]
+        require: true,
     },
-    status: {
-        type: String,
+
+    isActive: {
+      type: Boolean,
+      default: true,
+      require: true,
     },
     paystatus: {
         type: Boolean,
+        default: true,
+        require: true,
     },
     dateofexpired: {
         type: Date,
     },
     transactions: {
         type: Object,
-    }
-
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
 });
 
 module.exports = mongoose.model('organization', organizationSchema);
