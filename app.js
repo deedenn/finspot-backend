@@ -5,11 +5,11 @@ require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
 const { errors } = require('celebrate');
-//const cors = require('cors');
+const cors = require('cors');
 
 const app = express();
 
-//app.use(cors());
+app.use(cors());
 
 const router = require('./routes');
 //const signRouter = require('./routes/sign');
