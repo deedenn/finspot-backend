@@ -20,6 +20,25 @@ const getUsers = (req, res, next) => {
     });
 };
 
+// получение данных о пользователе
+const getInfoUser = (req, res, next) => {
+  User.findById({ _id: req.user._id })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        res.send({ data: user });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Пользователя c таким ID не существует'));
+        return;
+      }
+      next(err);
+    });
+};
+
 // создание нового пользователя
 const createUser = (req, res, next) => {
   const {
@@ -88,5 +107,5 @@ const login = (req, res, next) => {
 
 
 module.exports = {
-  getUsers, createUser, login,
+  getUsers, getInfoUser, createUser, login,
 };
