@@ -20,6 +20,17 @@ const getUsers = (req, res, next) => {
     });
 };
 
+// получение списка всех пользователей организации
+const getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => {
+      res.send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 // получение данных о пользователе
 const getInfoUser = (req, res, next) => {
   User.findById({ _id: req.user._id })

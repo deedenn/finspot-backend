@@ -11,6 +11,6 @@ router.use(signRouter);
 router.use('/users', auth, usersRouter);
 router.use('/requests', auth, requestsRouter);
 router.use('/registries', auth, registriesRouter);
-router.use('/org', organizationsRouter);
+router.use('/organizations', organizationsRouter);
 
 module.exports = router;

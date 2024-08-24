@@ -21,6 +21,9 @@ const requestSchema = new mongoose.Schema({
     maxlength: 30,
     default: 'Ваша компания',
   },
+  type: {
+    type: String,
+  }
   file: {
     type: String,
   },
