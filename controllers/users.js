@@ -21,7 +21,7 @@ const getUsers = (req, res, next) => {
 };
 
 // получение списка всех пользователей организации
-const getUsers = (req, res, next) => {
+const getUsersByOrg = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.send({ users });
@@ -118,5 +118,5 @@ const login = (req, res, next) => {
 
 
 module.exports = {
-  getUsers, getInfoUser, createUser, login,
+  getUsers, getUsersByOrg, getInfoUser, createUser, login,
 };
