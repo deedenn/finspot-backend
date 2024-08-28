@@ -16,10 +16,8 @@ const requestSchema = new mongoose.Schema({
     default: 'Жак-Ив Кусто',
   },
   organization: {
-    type: String,
-    minlength: 2,
-    maxlength: 30,
-    default: 'Ваша компания',
+    type: mongoose.Schema.Types.ObjectId,
+    require: true,
   },
   type: {
     type: String,

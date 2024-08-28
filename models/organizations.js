@@ -10,7 +10,7 @@ const organizationSchema = new mongoose.Schema({
         maxlength: 30,
         require: true,
     },
-    users: {
+    approveUsers: {
         type: Array,
         // [
         //     {
@@ -20,12 +20,16 @@ const organizationSchema = new mongoose.Schema({
         //     }
         // ]
         require: true,
+        default: [],
     },
-
+    supervisor: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+    },
     isActive: {
-      type: Boolean,
-      default: true,
-      require: true,
+        type: Boolean,
+        default: true,
+        require: true,
     },
     paystatus: {
         type: Boolean,
@@ -39,8 +43,8 @@ const organizationSchema = new mongoose.Schema({
         type: Object,
     },
     createdAt: {
-      type: Date,
-      default: Date.now,
+        type: Date,
+        default: Date.now,
     },
 });
 

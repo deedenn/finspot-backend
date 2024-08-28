@@ -1,6 +1,6 @@
 const Request = require('../models/requests');
 const BadRequestError = require('../errors/badrequest');
-
+const Organization = require("../models/organizations");
 // получить список всех заявок
 const getRequests = (req, res, next) => {
   Request.find()
@@ -23,6 +23,18 @@ const getOwnerRequest = (req, res, next) => {
       next(err);
     });
 };
+
+// получить список всех заявок, где пользователь имеет права чтение
+const getUserRequests = async (req, res, next) => {
+  const { id } = req.params;
+
+  const organizations = await Organization.find({
+    approveUsers: { $elemMatch: { id: id } }
+  })
+  const requests = await organizations.map(async (item) => await Request.find({ organization: item }))
+  // const requests = await Request.find({ organization: organizations[1]._id })
+  res.send({ organizations, requests })
+}
 
 // создание новой заявки
 // Нужно добавить права на видимость заявки и редактирование
@@ -110,5 +122,5 @@ const checkRequest = (req, res, next) => {
 
 
 module.exports = {
-  getRequests, getOwnerRequest, createRequest, checkRequest, editRequest,
+  getRequests, getOwnerRequest, createRequest, checkRequest, editRequest, getUserRequests,
 };

@@ -11,15 +11,17 @@ const getOrganizations = (req, res, next) => {
     });
 };
 
-// создание новой организиции
+// создание новой организиции 
+// добавить проверку на существование организации в БД (ИНН)
 const createOrganization = (req, res, next) => {
   console.log(req.body.users);
   const {
     inn, name, users,
   } = req.body;
+  const id = req.user._id;
   Organization.create(
     {
-      inn, name, users,
+      inn, name, users, supervisor: id,
     }
   )
     .then((newOrganization) => {
@@ -35,6 +37,19 @@ const createOrganization = (req, res, next) => {
 }
 
 // Изменение маршрута согласования
+const updateApproveList = async (req, res, next) => {
+  const {
+    approveUsers, id
+  } = req.body;
+  const org = await Organization.findByIdAndUpdate(id, { approveUsers })
+  console.log(org);
+  if (org) {
+    res.status(200).send({ message: 'approveUSers is updated' })
+  } else {
+    res.status(404).send({ message: "ApproveUser is not update" })
+  }
+
+}
 
 // Продление срока действия подписки
 
@@ -42,5 +57,5 @@ const createOrganization = (req, res, next) => {
 
 
 module.exports = {
-  getOrganizations, createOrganization,
+  getOrganizations, createOrganization, updateApproveList,
 };
