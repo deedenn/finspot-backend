@@ -23,7 +23,7 @@ const requestSchema = new mongoose.Schema({
     type: String,
   },
   file: {
-    type: String,
+    type: Buffer,
   },
   contragent: {
     type: String,

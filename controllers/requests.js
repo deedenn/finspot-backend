@@ -24,7 +24,29 @@ const getOwnerRequest = (req, res, next) => {
     });
 };
 
+// получить заявку по ID
+const getRequestByID = (req, res, next) => {
+const {id} = req.params;
+
+  Request.findById({ _id: id })
+    .then((request) => {
+      if (!request) {
+        throw new NotFoundError('Заявка не найдена');
+      } else {
+        res.send(request);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Заявки c таким ID не существует'));
+        return;
+      }
+      next(err);
+    });
+};
+
 // получить список всех заявок, где пользователь имеет права чтение
+// не работает!!!
 const getUserRequests = async (req, res, next) => {
   const { id } = req.params;
 
@@ -122,5 +144,5 @@ const checkRequest = (req, res, next) => {
 
 
 module.exports = {
-  getRequests, getOwnerRequest, createRequest, checkRequest, editRequest, getUserRequests,
+  getRequests, getOwnerRequest, getRequestByID, createRequest, checkRequest, editRequest, getUserRequests,
 };
