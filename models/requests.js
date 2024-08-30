@@ -37,6 +37,9 @@ const requestSchema = new mongoose.Schema({
     maxlength: 10,
     default: '0',
   },
+  dayToPay: {
+    type: Date,
+  }
   status: {
     type: String,
   },
