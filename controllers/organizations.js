@@ -13,24 +13,24 @@ const getOrganizations = (req, res, next) => {
 
 // получить организацию по ID
 const getOrganizationByID = (req, res, next) => {
-  const {id} = req.params;
+  const { id } = req.params;
 
-    Organization.findById({ _id: id })
-      .then((organization) => {
-        if (!organization) {
-          throw new NotFoundError('Организация не найдена');
-        } else {
-          res.send(organization);
-        }
-      })
-      .catch((err) => {
-        if (err.name === 'CastError') {
-          next(new BadRequestError('Организации c таким ID не существует'));
-          return;
-        }
-        next(err);
-      });
-  };
+  Organization.findById({ _id: id })
+    .then((organization) => {
+      if (!organization) {
+        throw new NotFoundError('Организация не найдена');
+      } else {
+        res.send(organization);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Организации c таким ID не существует'));
+        return;
+      }
+      next(err);
+    });
+};
 
 // создание новой организиции
 // добавить проверку на существование организации в БД (ИНН)
@@ -65,7 +65,7 @@ const updateApproveList = async (req, res, next) => {
   const org = await Organization.findByIdAndUpdate(id, { approveUsers })
   console.log(org);
   if (org) {
-    res.status(200).send({ message: 'approveUsers is updated' })
+    res.status(200).send({ message: 'approveUsers is updated', org })
   } else {
     res.status(404).send({ message: "ApproveUser is not update" })
   }
