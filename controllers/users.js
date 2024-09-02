@@ -31,7 +31,7 @@ const getUsersByOrg = (req, res, next) => {
     });
 };
 
-// получение данных о пользователе
+// получение профиля авторизованного пользователя
 const getInfoUser = (req, res, next) => {
   User.findById({ _id: req.user._id })
     .then((user) => {
@@ -49,6 +49,28 @@ const getInfoUser = (req, res, next) => {
       next(err);
     });
 };
+
+// получение профиля пользователя по ID
+const getInfoUserByID = (req, res, next) => {
+  const { id } = req.params;
+
+  User.findById({ _id: id })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        res.send({ data: user });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Пользователя c таким ID не существует'));
+        return;
+      }
+      next(err);
+    });
+};
+
 
 // создание нового пользователя
 const createUser = (req, res, next) => {
@@ -118,5 +140,5 @@ const login = (req, res, next) => {
 
 
 module.exports = {
-  getUsers, getUsersByOrg, getInfoUser, createUser, login,
+  getUsers, getUsersByOrg, getInfoUser, getInfoUserByID, createUser, login,
 };
