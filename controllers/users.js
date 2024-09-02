@@ -59,7 +59,28 @@ const getInfoUserByID = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       } else {
-        res.send({ data: user });
+        res.send({ user });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Пользователя c таким ID не существует'));
+        return;
+      }
+      next(err);
+    });
+};
+
+// получение профиля пользователя по Email
+const getInfoUserByEmail = (req, res, next) => {
+  const { email } = req.params;
+
+  User.findOne({email: email})
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        res.send({ user });
       }
     })
     .catch((err) => {
@@ -140,5 +161,5 @@ const login = (req, res, next) => {
 
 
 module.exports = {
-  getUsers, getUsersByOrg, getInfoUser, getInfoUserByID, createUser, login,
+  getUsers, getUsersByOrg, getInfoUser, getInfoUserByID, getInfoUserByEmail, createUser, login,
 };
