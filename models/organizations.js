@@ -10,6 +10,18 @@ const organizationSchema = new mongoose.Schema({
         maxlength: 30,
         require: true,
     },
+    users: {
+        type: Array,
+        // [
+        //     {
+        //         id: mongoose.Schema.Types.ObjectId,
+        //         index: Number,
+        //         actionState: String
+        //     }
+        // ]
+        require: true,
+        default: [],
+    },
     approveUsers: {
         type: Array,
         // [
