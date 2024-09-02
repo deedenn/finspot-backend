@@ -73,9 +73,9 @@ const getInfoUserByID = (req, res, next) => {
 
 // получение профиля пользователя по Email
 const getInfoUserByEmail = (req, res, next) => {
-  const { email } = req.params;
+  const { email } = req.body;
 
-  User.findOne({email: email})
+  User.findOne({ email: email })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -85,7 +85,7 @@ const getInfoUserByEmail = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователя c таким ID не существует'));
+        next(new BadRequestError('Пользователя c таким email не существует'));
         return;
       }
       next(err);
