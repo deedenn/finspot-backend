@@ -1,6 +1,6 @@
 const { auth } = require('../middlewares/auth')
 const express = require('express');
-const { getOrganizations, getOrganizationByID createOrganization, updateApproveList } = require('../controllers/organizations');
+const { getOrganizations, getOrganizationByID, createOrganization, updateApproveList } = require('../controllers/organizations');
 const organizations = require('../models/organizations');
 
 const organizationsRouter = express.Router();

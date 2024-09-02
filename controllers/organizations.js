@@ -65,7 +65,7 @@ const updateApproveList = async (req, res, next) => {
   const org = await Organization.findByIdAndUpdate(id, { approveUsers })
   console.log(org);
   if (org) {
-    res.status(200).send({ message: 'approveUSers is updated' })
+    res.status(200).send({ message: 'approveUsers is updated' })
   } else {
     res.status(404).send({ message: "ApproveUser is not update" })
   }
