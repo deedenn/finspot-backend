@@ -13,6 +13,27 @@ const getRegistries = (req, res, next) => {
     });
 };
 
+// получить реестр по ID
+const getRegistryByID = (req, res, next) => {
+  const {id} = req.params;
+
+    Registry.findById({ _id: id })
+      .then((registry) => {
+        if (!registry) {
+          throw new NotFoundError('Реестр не найден');
+        } else {
+          res.send(registry);
+        }
+      })
+      .catch((err) => {
+        if (err.name === 'CastError') {
+          next(new BadRequestError('Реестр c таким ID не существует'));
+          return;
+        }
+        next(err);
+      });
+  };
+
 // список всех реестров, которые доступны для просмотра пользователю
 const getOwnerRegistry = (req, res, next) => {
   console.log(req.user._id);
@@ -54,5 +75,5 @@ const createRegistry = (req, res, next) => {
 
 
 module.exports = {
-  getRegistries, getOwnerRegistry, createRegistry,
+  getRegistries, getRegistryByID, getOwnerRegistry, createRegistry,
 };
