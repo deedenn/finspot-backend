@@ -20,17 +20,6 @@ const getUsers = (req, res, next) => {
     });
 };
 
-// получение списка всех пользователей организации
-const getUsersByOrg = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.send({ users });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
 // получение профиля авторизованного пользователя
 const getInfoUser = (req, res, next) => {
   User.findById({ _id: req.user._id })
@@ -93,7 +82,7 @@ const getInfoUserByEmail = (req, res, next) => {
 };
 
 
-// создание нового пользователя
+// добавление нового пользователя в организацию
 const createUser = (req, res, next) => {
   const {
     name, fullname, email, password,
@@ -161,5 +150,5 @@ const login = (req, res, next) => {
 
 
 module.exports = {
-  getUsers, getUsersByOrg, getInfoUser, getInfoUserByID, getInfoUserByEmail, createUser, login,
+  getUsers, getInfoUser, getInfoUserByID, getInfoUserByEmail, createUser, login,
 };

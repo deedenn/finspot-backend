@@ -1,4 +1,5 @@
 const Organization = require("../models/organizations");
+const User = require("../models/users");
 
 // список всех организаций
 const getOrganizations = (req, res, next) => {
@@ -32,17 +33,44 @@ const getOrganizationByID = (req, res, next) => {
     });
 };
 
+// получение списка всех пользователей организации
+const getUsersByOrg = (req, res, next) => {
+  const { id } = req.params;
+  Organization.findOne(id)
+    .then((org) => {
+      res.send({org});
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// добавление пользователя в организацию
+const patchUsersByOrg = (req, res, next) => {
+  const { id } = req.params;
+  const { users} = req.body;
+  Organization.findOneAndReplace( {id: id}, {users: users})
+    .then((org) => {
+      res.send({org});
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+
 // создание новой организиции
 // добавить проверку на существование организации в БД (ИНН)
 const createOrganization = (req, res, next) => {
-  console.log(req.body.users);
   const {
-    inn, name, users,
+    inn, name,
   } = req.body;
+  console.log(inn, name);
+
   const id = req.user._id;
   Organization.create(
     {
-      inn, name, users, supervisor: id,
+      inn, name, supervisor: id,
     }
   )
     .then((newOrganization) => {
@@ -56,6 +84,8 @@ const createOrganization = (req, res, next) => {
       next(err);
     });
 }
+
+
 
 // Изменение маршрута согласования
 const updateApproveList = async (req, res, next) => {
@@ -78,5 +108,5 @@ const updateApproveList = async (req, res, next) => {
 
 
 module.exports = {
-  getOrganizations, getOrganizationByID, createOrganization, updateApproveList,
+  getOrganizations, getOrganizationByID, getUsersByOrg, patchUsersByOrg, createOrganization, updateApproveList,
 };
