@@ -38,7 +38,7 @@ const getUsersByOrg = (req, res, next) => {
   const { id } = req.params;
   Organization.findOne(id)
     .then((org) => {
-      res.send({org});
+      res.send({ org });
     })
     .catch((err) => {
       next(err);
@@ -48,10 +48,10 @@ const getUsersByOrg = (req, res, next) => {
 // добавление пользователя в организацию
 const patchUsersByOrg = (req, res, next) => {
   const { id } = req.params;
-  const { users} = req.body;
-  Organization.findOneAndReplace( {id: id}, {users: users})
+  const { users } = req.body;
+  Organization.findOneAndReplace({ id: id }, { users: users })
     .then((org) => {
-      res.send({org});
+      res.send({ org });
     })
     .catch((err) => {
       next(err);
