@@ -43,6 +43,10 @@ const requestSchema = new mongoose.Schema({
   status: {
     type: String,
   },
+  stage: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -97,6 +97,7 @@ const createUser = (req, res, next) => {
         email: newUser.email,
         name: newUser.name,
         fullname: newUser.fullname,
+        id: newUser._id,
       });
     })
     .catch((err) => {

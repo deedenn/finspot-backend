@@ -26,7 +26,7 @@ const getOwnerRequest = (req, res, next) => {
 
 // получить заявку по ID
 const getRequestByID = (req, res, next) => {
-const {id} = req.params;
+  const { id } = req.params;
 
   Request.findById({ _id: id })
     .then((request) => {
@@ -53,9 +53,18 @@ const getUserRequests = async (req, res, next) => {
   const organizations = await Organization.find({
     approveUsers: { $elemMatch: { id: id } }
   })
-  const requests = await organizations.map(async (item) => await Request.find({ organization: item }))
+
+  const reqs = await Promise.all(organizations.map(async org => {
+    const index = org.approveUsers.findIndex(user => user.id === id)
+    const reqs = await Request.find({ organization: org._id, stage: index })
+    return { org, reqs }
+  }))
+
+
+
+  // const requests = await organizations.map(async (item) => await Request.find({ organization: item }))
   // const requests = await Request.find({ organization: organizations[1]._id })
-  res.send({ organizations, requests })
+  res.send(reqs)
 }
 
 // создание новой заявки
@@ -115,7 +124,42 @@ const editRequest = (req, res, next) => {
 
 // изменение статуса заявки после действий пользователя
 
-const checkRequest = (req, res, next) => {
+const checkRequest = async (req, res, next) => {
+  try {
+    const { _id, status } = req.body
+    const request = await Request.findOne({ _id })
+    if (!request) res.status(404).send({ message: 'req is not a found' })
+    request.status = status
+    request.stage += 1
+    request.save()
+    res.status(200).send({ request })
+  } catch (err) { next(err) }
+
+  // Request.findByIdAndUpdate(id, { status: req.body.status,  },
+  //   {
+  //     new: true,
+  //     runValidators: true,
+  //   },
+  // )
+  //   .then((request) => {
+  //     if (!request) {
+  //       throw new NotFoundError('Заявка с указанным ID не найдена');
+  //     } else {
+  //       res.send({ data: request });
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     if (err.name === 'ValidationError') {
+  //       next(new BadRequestError('Переданы некорректные данные'));
+  //       return;
+  //     }
+  //     next(err);
+  //   });
+}
+
+// сделать заявку неактивной, статус "отменена"
+
+const cancelRequest = (req, res, next) => {
   const id = req.body._id
 
   Request.findByIdAndUpdate(id, { status: req.body.status },
@@ -140,9 +184,6 @@ const checkRequest = (req, res, next) => {
     });
 }
 
-// сделать заявку неактивной, статус "отменена"
-
-
 module.exports = {
-  getRequests, getOwnerRequest, getRequestByID, createRequest, checkRequest, editRequest, getUserRequests,
+  getRequests, getOwnerRequest, getRequestByID, createRequest, checkRequest, cancelRequest, editRequest, getUserRequests,
 };

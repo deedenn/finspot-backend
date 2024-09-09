@@ -49,7 +49,7 @@ const getUsersByOrg = (req, res, next) => {
 const patchUsersByOrg = (req, res, next) => {
   const { id } = req.params;
   const { users } = req.body;
-  Organization.findOneAndReplace({ id: id }, { users: users })
+  Organization.findOneAndUpdate({ id: id }, { users: users })
     .then((org) => {
       res.send({ org });
     })
