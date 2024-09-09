@@ -47,10 +47,19 @@ const getUsersByOrg = (req, res, next) => {
 
 // добавление пользователя в организацию
 const patchUsersByOrg = (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.body;
   const { users } = req.body;
-  Organization.findOneAndUpdate({ id: id }, { users: users })
+  console.log(`Это айди компании ${id}`);
+  console.log(`Это айди пользователя, которого добавляем ${users}`);
+
+  // сделать проверку, есть ли этот пользователь в базе. Если есть, то сообщение. Если нет, то добавляем
+  Organization.findByIdAndUpdate({ _id: id }, { "$push": { users: users } }, {
+    new: true,
+    runValidators: true,
+  })
     .then((org) => {
+      console.log(org);
+
       res.send({ org });
     })
     .catch((err) => {
