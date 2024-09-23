@@ -16,7 +16,7 @@ const getUsers = (req, res, next) => {
       res.send({ users });
     })
     .catch((err) => {
-      next(err);
+      next(new Error('users not found'))
     });
 };
 

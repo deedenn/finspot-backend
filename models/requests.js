@@ -53,6 +53,11 @@ const requestSchema = new mongoose.Schema({
   },
   statuslog: {
     type: Array,
+    // stage: Этап заявки
+    // date: Дата изменения статуса
+    // time: Время изменения статуса
+    // user: Имя и фамилия пользователя
+    // message: Текст комментария
   },
 });
 

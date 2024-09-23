@@ -1,9 +1,32 @@
 const Request = require('../models/requests');
 const BadRequestError = require('../errors/badrequest');
 const Organization = require("../models/organizations");
+
 // получить список всех заявок
 const getRequests = (req, res, next) => {
   Request.find()
+    .then((request) => {
+      res.send({ request });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// получить список всех заявок по ID организации
+const getRequestsByOrgID = (req, res, next) => {
+  Request.find({ organization: req.params.id })
+    .then((request) => {
+      res.send({ request });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// получить список всех заявок по ID организации и со статусом "Утвержден"
+const getRequestsApproved = (req, res, next) => {
+  Request.find({ organization: req.params.id, status: "Утверждено" })
     .then((request) => {
       res.send({ request });
     })
@@ -20,7 +43,7 @@ const getOwnerRequest = (req, res, next) => {
       res.send(request);
     })
     .catch((err) => {
-      next(err);
+      next(new Error('Заявки не найдены'));
     });
 };
 
@@ -46,7 +69,6 @@ const getRequestByID = (req, res, next) => {
 };
 
 // получить список всех заявок, где пользователь имеет права чтение
-// не работает!!!
 const getUserRequests = async (req, res, next) => {
   const { id } = req.params;
 
@@ -60,8 +82,6 @@ const getUserRequests = async (req, res, next) => {
     return { org, reqs }
   }))
 
-
-
   // const requests = await organizations.map(async (item) => await Request.find({ organization: item }))
   // const requests = await Request.find({ organization: organizations[1]._id })
   res.send(reqs)
@@ -72,11 +92,11 @@ const getUserRequests = async (req, res, next) => {
 const createRequest = (req, res, next) => {
   const { _id } = req.user;
   const {
-    requestId, description, organization, contragent, amount,
+    requestId, description, organization, contragent, amount, type, statuslog,
   } = req.body;
   Request.create(
     {
-      requestId, description, organization, contragent, amount, owner: _id, status: "Согласование ФД",
+      requestId, description, organization, contragent, amount, type, owner: _id, status: "Согласование ФД", statuslog,
     }
   )
     .then((newRequest) => {
@@ -91,7 +111,7 @@ const createRequest = (req, res, next) => {
     });
 }
 
-// редактирование заявки
+// редактирование заявки, если статус Черновик. Редактирует только создатель.
 
 const editRequest = (req, res, next) => {
   const id = req.body._id;
@@ -126,64 +146,56 @@ const editRequest = (req, res, next) => {
 
 const checkRequest = async (req, res, next) => {
   try {
-    const { _id, status } = req.body
+    const { _id, status, stageStatus, message, user } = req.body
     const request = await Request.findOne({ _id })
-    if (!request) res.status(404).send({ message: 'req is not a found' })
+    if (!request) res.status(404).send({ message: 'request is not a found' })
+    request.statuslog.push({ stage: request.status, date: Date.now(), user: user, message: message })
     request.status = status
-    request.stage += 1
+    request.stage = request.stage + stageStatus
     request.save()
     res.status(200).send({ request })
   } catch (err) { next(err) }
-
-  // Request.findByIdAndUpdate(id, { status: req.body.status,  },
-  //   {
-  //     new: true,
-  //     runValidators: true,
-  //   },
-  // )
-  //   .then((request) => {
-  //     if (!request) {
-  //       throw new NotFoundError('Заявка с указанным ID не найдена');
-  //     } else {
-  //       res.send({ data: request });
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     if (err.name === 'ValidationError') {
-  //       next(new BadRequestError('Переданы некорректные данные'));
-  //       return;
-  //     }
-  //     next(err);
-  //   });
 }
 
+// отмена заявки
 // сделать заявку неактивной, статус "отменена"
 
-const cancelRequest = (req, res, next) => {
-  const id = req.body._id
-
-  Request.findByIdAndUpdate(id, { status: req.body.status },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((request) => {
-      if (!request) {
-        throw new NotFoundError('Заявка с указанным ID не найдена');
-      } else {
-        res.send({ data: request });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-        return;
-      }
-      next(err);
-    });
+const cancelRequest = async (req, res, next) => {
+  try {
+    const { _id, message, user } = req.body
+    const request = await Request.findOne({ _id })
+    if (!request) res.status(404).send({ message: 'request is not a found' })
+    request.statuslog.push({ stage: request.status, date: Date.now(), user: user, message: message })
+    request.status = "Отменено"
+    request.stage = -1
+    request.save()
+    res.status(200).send({ request })
+  } catch (err) { next(err) }
 }
 
+// Request.findByIdAndUpdate(id, { status: req.body.status,  },
+//   {
+//     new: true,
+//     runValidators: true,
+//   },
+// )
+//   .then((request) => {
+//     if (!request) {
+//       throw new NotFoundError('Заявка с указанным ID не найдена');
+//     } else {
+//       res.send({ data: request });
+//     }
+//   })
+//   .catch((err) => {
+//     if (err.name === 'ValidationError') {
+//       next(new BadRequestError('Переданы некорректные данные'));
+//       return;
+//     }
+//     next(err);
+//   });
+
+
+
 module.exports = {
-  getRequests, getOwnerRequest, getRequestByID, createRequest, checkRequest, cancelRequest, editRequest, getUserRequests,
+  getRequests, getRequestsByOrgID, getOwnerRequest, getRequestsApproved, getRequestByID, createRequest, checkRequest, cancelRequest, editRequest, getUserRequests,
 };

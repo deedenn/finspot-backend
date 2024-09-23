@@ -3,7 +3,7 @@ const User = require("../models/users");
 
 // список всех организаций
 const getOrganizations = (req, res, next) => {
-  Organization.find({})
+  Organization.find({ users: req.user._id })
     .then((organizations) => {
       res.send({ organizations });
     })
@@ -98,17 +98,22 @@ const createOrganization = (req, res, next) => {
 
 // Изменение маршрута согласования
 const updateApproveList = async (req, res, next) => {
-  const {
-    approveUsers, id
-  } = req.body;
-  const org = await Organization.findByIdAndUpdate(id, { approveUsers })
-  console.log(org);
-  if (org) {
-    res.status(200).send({ message: 'approveUsers is updated', org })
-  } else {
-    res.status(404).send({ message: "ApproveUser is not update" })
+  try {
+    const {
+      approveUsers, id
+    } = req.body;
+    const org = await Organization.findByIdAndUpdate(id, { approveUsers }, {
+      new: true,
+    }
+    )
+    console.log(org);
+    if (org) {
+      res.status(200).send({ message: 'approveUsers is updated', org })
+    } else {
+      res.status(404).send({ message: "ApproveUser is not update" })
+    }
   }
-
+  catch (err) { next(err) }
 }
 
 // Продление срока действия подписки
