@@ -1,6 +1,7 @@
 const Request = require('../models/requests');
 const BadRequestError = require('../errors/badrequest');
 const Organization = require("../models/organizations");
+const requests = require('../models/requests');
 
 // получить список всех заявок
 const getRequests = (req, res, next) => {
@@ -89,26 +90,22 @@ const getUserRequests = async (req, res, next) => {
 
 // создание новой заявки
 // Нужно добавить права на видимость заявки и редактирование
-const createRequest = (req, res, next) => {
-  const { _id } = req.user;
-  const {
-    requestId, description, organization, contragent, amount, type, statuslog,
-  } = req.body;
-  Request.create(
-    {
-      requestId, description, organization, contragent, amount, type, owner: _id, status: "Согласование ФД", statuslog,
-    }
-  )
-    .then((newRequest) => {
-      res.status(201).send(newRequest);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании заявки'));
-        return;
+const createRequest = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const {
+      description, organization, contragent, amount, type, statuslog, track,
+    } = req.body;
+    const requests = await Request.find({ organization })
+    const requestId = `${organization.slice(organization.length - 4)}-${requests.length}`
+    const newRequest = await Request.create(
+      {
+        description, requestId, organization, contragent, amount, type, owner: _id, stage: 1, status: "Согласование ФД", statuslog,
+        track,
       }
-      next(err);
-    });
+    )
+    res.status(201).send(newRequest);
+  } catch (err) { next(err) }
 }
 
 // редактирование заявки, если статус Черновик. Редактирует только создатель.

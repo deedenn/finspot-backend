@@ -72,14 +72,14 @@ const patchUsersByOrg = (req, res, next) => {
 // добавить проверку на существование организации в БД (ИНН)
 const createOrganization = (req, res, next) => {
   const {
-    inn, name,
+    inn, name, prefix
   } = req.body;
-  console.log(inn, name);
+  console.log(inn, name, prefix);
 
   const id = req.user._id;
   Organization.create(
     {
-      inn, name, supervisor: id,
+      inn, name, prefix, supervisor: id,
     }
   )
     .then((newOrganization) => {

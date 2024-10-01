@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const registrySchema = new mongoose.Schema({
+  registryId: {
+    type: String,
+    require: true,
+    default: '',
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
@@ -19,7 +24,7 @@ const registrySchema = new mongoose.Schema({
   },
   amount: {
     type: Number,
-    minlength: 2,
+    minlength: 1,
     maxlength: 10,
     default: '0',
   },
@@ -29,6 +34,14 @@ const registrySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  statuslog: {
+    type: Array,
+    // stage: Этап утверждения реестра
+    // date: Дата изменения статуса
+    // time: Время изменения статуса
+    // user: Имя и фамилия пользователя
+    // message: Текст комментария
   },
 });
 

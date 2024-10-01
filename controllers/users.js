@@ -147,9 +147,35 @@ const login = (req, res, next) => {
 // редактирование пароля пользователя
 
 
-// удаление пользователя из доступа к организации
+// изменение пользователя на неактивный
 
+const activeUser = (req, res, next) => {
+  const { email } = req.body;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        if (User.active = false) {
+          User.active = true
+        }
+        else {
+          User.active = false
+        }
+      };
+      res.send({ user });
+    }
+    )
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Пользователя c таким email не существует'));
+        return;
+      }
+      next(err);
+    });
+}
 
 module.exports = {
-  getUsers, getInfoUser, getInfoUserByID, getInfoUserByEmail, createUser, login,
+  getUsers, getInfoUser, getInfoUserByID, getInfoUserByEmail, createUser, login, activeUser,
 };

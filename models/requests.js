@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
   requestId: {
-    type: Number,
+    type: String,
+    default: '',
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -13,7 +14,7 @@ const requestSchema = new mongoose.Schema({
     type: String,
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто',
+    default: 'Описание заявки',
   },
   organization: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,6 +43,10 @@ const requestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+  },
+  track: {
+    type: Array,
+    require: true,
   },
   stage: {
     type: Number,

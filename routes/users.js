@@ -1,12 +1,12 @@
 const express = require('express');
-const { getUsers, getInfoUser, getInfoUserByID, getInfoUserByEmail } = require('../controllers/users');
-const { auth } = require('../middlewares/auth')
+const { getUsers, getInfoUser, getInfoUserByID, getInfoUserByEmail, activeUser } = require('../controllers/users');
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', auth, getUsers);
-usersRouter.get('/me', auth, getInfoUser);
-usersRouter.get('/:id', auth, getInfoUserByID);
-usersRouter.post('/email/check', auth, getInfoUserByEmail);
+usersRouter.get('/', getUsers);
+usersRouter.get('/me', getInfoUser);
+usersRouter.get('/:id', getInfoUserByID);
+usersRouter.post('/email/check', getInfoUserByEmail);
+usersRouter.post('/active', activeUser);
 
 module.exports = usersRouter;
