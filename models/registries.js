@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const registrySchema = new mongoose.Schema({
-  registryId: {
+  registryID: {
     type: String,
     require: true,
     default: '',
@@ -34,6 +34,10 @@ const registrySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  dateOfPay: {
+    type: Date,
+    default: null,
   },
   statuslog: {
     type: Array,

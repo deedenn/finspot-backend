@@ -14,5 +14,4 @@ requestsRouter.patch('/cancel', cancelRequest);
 requestsRouter.get('/approve/:id', getUserRequests);
 requestsRouter.get('/approved/:id', getRequestsApproved)
 
-
 module.exports = requestsRouter;
