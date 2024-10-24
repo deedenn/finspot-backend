@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
-  requestId: {
+  requestID: {
     type: String,
     default: '',
   },

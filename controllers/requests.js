@@ -97,10 +97,11 @@ const createRequest = async (req, res, next) => {
       description, organization, contragent, amount, type, statuslog, track,
     } = req.body;
     const requests = await Request.find({ organization })
-    const requestId = `${organization.slice(organization.length - 4)}-${requests.length}`
+    const requestID = `${organization.slice(organization.length - 4)}-${requests.length}`
+
     const newRequest = await Request.create(
       {
-        description, requestId, organization, contragent, amount, type, owner: _id, stage: 1, status: "Согласование ФД", statuslog,
+        description, requestID, organization, contragent, amount, type, owner: _id, stage: 1, status: "Согласование ФД", statuslog,
         track,
       }
     )
@@ -169,29 +170,6 @@ const cancelRequest = async (req, res, next) => {
     res.status(200).send({ request })
   } catch (err) { next(err) }
 }
-
-// Request.findByIdAndUpdate(id, { status: req.body.status,  },
-//   {
-//     new: true,
-//     runValidators: true,
-//   },
-// )
-//   .then((request) => {
-//     if (!request) {
-//       throw new NotFoundError('Заявка с указанным ID не найдена');
-//     } else {
-//       res.send({ data: request });
-//     }
-//   })
-//   .catch((err) => {
-//     if (err.name === 'ValidationError') {
-//       next(new BadRequestError('Переданы некорректные данные'));
-//       return;
-//     }
-//     next(err);
-//   });
-
-
 
 module.exports = {
   getRequests, getRequestsByOrgID, getOwnerRequest, getRequestsApproved, getRequestByID, createRequest, checkRequest, cancelRequest, editRequest, getUserRequests,

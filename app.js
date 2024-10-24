@@ -15,6 +15,7 @@ const router = require('./routes');
 //const signRouter = require('./routes/sign');
 //const { auth } = require('./middlewares/auth');
 const NotFoundError = require('./errors/notfound');
+//const { runTest } = require('./S3/settingsS3');
 //const { centralError } = require('./middlewares/centralError');
 //const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -51,3 +52,5 @@ app.use(errors());
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
+
+//runTest();
